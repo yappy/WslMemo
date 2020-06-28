@@ -33,3 +33,11 @@ fi
 ```
 
 34(blue) を例えば 36(cyan) にする。
+
+
+## Tab 自動補完時のビープ音がうるさい
+`/etc/inputrc` を編集。
+```
+# uncomment
+set bell-style none
+```
