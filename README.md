@@ -41,3 +41,54 @@ fi
 # uncomment
 set bell-style none
 ```
+
+# WSL2
+WSL1 からの移行ガイドを含む。
+
+## WSL の有効化
+管理者権限で PowerShell を開き、以下を実行する。
+(WSL1 が動いているなら既に有効になっているはず)
+コントロールパネルの "Windows 機能の有効化" 相当っぽい。
+```
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+```
+
+## 仮想マシン機能の有効化
+Windows の仮想マシン機能っぽい何か。
+WSL2 は仮想マシン上で Linux kernel を動作させる。
+BIOS で仮想化機能を有効にしておく必要がある可能性がある。
+```
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+```
+
+## Linux kernel の更新
+https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
+
+現在の Windows 内に Linux kernel が同梱されている衝撃。
+更新しなくてもまあまあ動くかもしれないし、更新しないと動かない場合もあるらしい。
+
+## WSL デフォルトバージョンの変更
+新規インストール時のバージョンを 2 にする。
+
+PowerShell で
+```
+wsl --set-default-version 2
+```
+
+## ディストリビューションのインストール
+ストアで Linux で検索すると色々出てくるので好きなものをインストールする。
+
+## WSL1 からの移行
+インストールされているディストリビューションと WSL version のリスト
+```
+wsl --list --verbose
+```
+
+以下のコマンドで少し待てばかなり簡単にバージョン移行できる。
+(WSL1 に戻すのも可)
+```
+wsl --set-version <distribution name> <versionNumber>
+
+例:
+wsl --set-version Debian 2
+```
