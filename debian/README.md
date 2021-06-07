@@ -32,3 +32,16 @@ git や cmake など。
 `apt show -a <pkg>`
 
 `apt install -t <version>-backports <pkg>`
+
+
+## 32 bit ELF の実行
+準備が整っていない場合のエラーが ENOENT になるようで、エラーメッセージが分かりにくい。
+
+https://askubuntu.com/questions/454253/how-to-run-32-bit-app-in-ubuntu-64-bit
+
+```
+sudo dpkg --add-architecture i386
+sudo apt-get update
+sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386
+sudo apt-get install multiarch-support
+```
