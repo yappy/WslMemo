@@ -45,6 +45,12 @@ set bell-style none
 # WSL2
 WSL1 からの移行ガイドを含む。
 
+公式ドキュメントトップ:
+https://docs.microsoft.com/ja-jp/windows/wsl/
+
+インストールガイド:
+https://docs.microsoft.com/ja-jp/windows/wsl/install-win10
+
 ## WSL の有効化
 管理者権限で PowerShell を開き、以下を実行する。
 (WSL1 が動いているなら既に有効になっているはず)
@@ -60,6 +66,7 @@ BIOS で仮想化機能を有効にしておく必要がある可能性がある
 ```
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 ```
+ここで **再起動** が必要らしい。
 
 ## Linux kernel の更新
 https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
