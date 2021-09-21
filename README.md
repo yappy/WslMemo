@@ -99,3 +99,37 @@ wsl --set-version <distribution name> <versionNumber>
 例:
 wsl --set-version Debian 2
 ```
+
+# 仮想ディスクの掃除
+WSL2 になりただの仮想マシンとなってしまったため、ゲスト OS 上でファイルを消しても
+仮想ディスクファイルが大きくなったまま戻らない。
+docker を連打した、事故ってクソデカファイルを作ってしまった、
+いつの間にか肥大化していた、等の場合。
+
+Microsoft の github に issue が上がっている。
+
+https://github.com/microsoft/WSL/issues/4699
+
+Optimize-VHD コマンドでコンパクション可能だそうだが、Windows Pro でないと存在しない。
+diskpart コマンドなら Windows Home でも存在する。
+
+1. %LocalAppData% 内で `ext4.vhdx` を検索し、パスを得る。
+ファイルを Shift + 右クリックで "パスのコピー" ができるぞ。
+1. PowerShell を管理者権限で立ち上げる。
+Windows + R でファイル名を指定して実行。この時 Ctrl + Shift + Enter で決定すると
+管理者権限で実行できるぞ。
+1. 以下のように仮想マシンをシャットダウンしてから diskpart コマンドで
+コンパクションを行う。
+
+```
+wsl --shutdown
+diskpart
+# open window Diskpart
+select vdisk file="C:\...\ext4.vhdx"
+attach vdisk readonly
+compact vdisk
+detach vdisk
+exit
+```
+
+WSL はシャットダウン状態でシェルを開こうとすると自動的に起動する。
