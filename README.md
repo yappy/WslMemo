@@ -3,13 +3,16 @@ WSL (Windows Subsystem for Linux) の覚え書き。
 最初にやることリスト。
 
 3行まとめ: ストアを開いて
-* vscode
 * Windows Terminal
 * WSL2
   * Windows Subsystem for Linux と Ubuntu, Debian のような個別のディストロが
   あるが、違いはよく分からない。前者は改めてディストロを選択してインストールする
   必要があるかも？
   個人的には Raspberry Pi に合わせて Debian を使用している。
+* vscode
+
+Windows Terminal は Windows 11 2022 Update (22H2) で既定のターミナルとなった。
+それ以前の場合はストアで。
 
 ## 一部ディレクトリの色が見づらい
 黒地に濃い青は見えない。
