@@ -2,26 +2,65 @@
 WSL (Windows Subsystem for Linux) の覚え書き。
 最初にやることリスト。
 
+3行まとめ: ストアを開いて
+* vscode
+* Windows Terminal
+* WSL2
+  * Windows Subsystem for Linux と Ubuntu, Debian のような個別のディストロが
+  あるが、違いはよく分からない。前者は改めてディストロを選択してインストールする
+  必要があるかも？
+  個人的には Raspberry Pi に合わせて Debian を使用している。
+
 ## 一部ディレクトリの色が見づらい
 黒地に濃い青は見えない。
 
+### 解1: Windows Terminal を使う
+デフォルトで WSL が起動する窓は conhost.exe と言って、歴史的には Windows 1.01 上で
+MS-DOS アプリケーションを動かすために導入されたものらしい。
+cmd.exe が動くのと同じもので、そういえば cmd.exe は DOS 窓と呼ばれるのでした。
+
+文字コードその他いろいろに関して互換性を保ちつつ改良するのが無理になったので、
+Microsoft 公式オープンソースソフトウェアとして Windows Terminal が開発された。
+Windows に同梱はされないが、ストアで検索してポチれば OK。無料。
+ストアが使えない会社の PC 等は github にパッケージリリースがあるらしい (未検証)。
+conhost.exe は互換性のため以降もサポートされるが、さすがに歴史を感じすぎるので
+コンソールを使う開発者はとりあえずこれを入れておけばよさそう。
+
+とりあえず評判はよい。
+タブも使えて PowerShell も WSL も全部これでいける。
+Ctrl + C でコピーできなかったのも conhost.exe のせい。
+これも解消する。
+
+これでデフォルト背景色がちょっと明るい黒になり、青色が見えるようになる
+(青色も薄くなっている気がするが目の錯覚かもしれない)。
+
+### 解2: dircolors を設定する
 .bashrc でホームディレクトリに `.dircolors` ファイルがあればそれを使うように
-なっているようなので、github から有名どころの色設定を頂いてきて
-シンボリックリンクを張る。
+なっているので、`dircolors -p` コマンドでデフォルト値を出力した後
+それを編集する。
 
 ```
-git clone https://github.com/mavnn/mintty-colors-solarized
-# 個人的には dircolors.256dark がおすすめ
-ln -s dircolors-solarized/dircolors.<you_like> ~/.dircolors
+# Output defaults
+dircolors -p > .dircolors
+
+# <edit>
+
+# Apply
 source ~/.bashrc
 ```
 
-ちなみに clone した中で `sudo make`
-(sudo しないと作れない種類のファイルがあるっぽい)
-するとテスト用のファイルセットの入ったディレクトリを作ってくれる。
-
+`DIR` などの `34=blue` になっているところを `36=cyan` あたりに変更すれば
+だいたい同じ印象のまま視認性が改善する。
+```
+# Text color codes:
+# 30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
+# Background color codes:
+# 40=black 41=red 42=green 43=yellow 44=blue 45=magenta 46=cyan 47=white
+```
 
 ## プロンプトのカレントディレクトリが見づらい
+こちらも Windows Terminal へ移行すれば自動的に改善する。
+
 .bashrc の以下の行が設定箇所。
 
 ```
@@ -100,7 +139,7 @@ wsl --set-version <distribution name> <versionNumber>
 wsl --set-version Debian 2
 ```
 
-# 仮想ディスクの掃除
+## 仮想ディスクの掃除
 WSL2 になりただの仮想マシンとなってしまったため、ゲスト OS 上でファイルを消しても
 仮想ディスクファイルが大きくなったまま戻らない。
 docker を連打した、事故ってクソデカファイルを作ってしまった、
@@ -133,3 +172,14 @@ exit
 ```
 
 WSL はシャットダウン状態でシェルを開こうとすると自動的に起動する。
+
+## Linux kernel のアップデート
+管理者権限で PowerShell を開き、
+```
+wsl --update
+```
+
+カーネルバージョン確認は WSL 内で
+```
+uname -r
+```
