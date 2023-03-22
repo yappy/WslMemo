@@ -14,6 +14,26 @@ WSL (Windows Subsystem for Linux) の覚え書き。
 Windows Terminal は Windows 11 2022 Update (22H2) で既定のターミナルとなった。
 それ以前の場合はストアで。
 
+# ターミナル
+
+## Windows Terminal - ストアが使えない場合
+github に個別インストールパッケージがあるのでこれを利用する。
+https://github.com/microsoft/terminal/releases
+
+自動更新はされないので新しくしたい場合はその都度ここを訪れる。
+
+PreInstallKit でない普通のパッケージをダウンロードする。
+
+1. ダブルクリックしてみる。
+1. ダメなら、PowerShell で
+`Add-AppxPackage Microsoft.WindowsTerminal_<versionNumber>.msixbundle`
+を実行する。
+1. ダメなら、Windows 10 を新しくするか VC++ v14 Desktop Framework Package
+なるものを入れてみる。
+
+詳しくは github トップの README に書いてある。
+https://github.com/microsoft/terminal
+
 ## 一部ディレクトリの色が見づらい
 黒地に濃い青は見えない。
 
@@ -64,6 +84,7 @@ source ~/.bashrc
 ## プロンプトのカレントディレクトリが見づらい
 こちらも Windows Terminal へ移行すれば自動的に改善する。
 
+### Windows Terminal を使わない場合
 .bashrc の以下の行が設定箇所。
 
 ```
@@ -91,9 +112,32 @@ WSL1 からの移行ガイドを含む。
 https://docs.microsoft.com/ja-jp/windows/wsl/
 
 インストールガイド:
-https://docs.microsoft.com/ja-jp/windows/wsl/install-win10
+https://learn.microsoft.com/ja-jp/windows/wsl/install
 
-## WSL の有効化
+## インストール
+以前のやり方は古くなった。
+Windows 10 の十分なバージョンまたは Windows 11 ならば wsl.exe で必要なものが
+すべて整う。
+
+Windows Terminal でないとインストール中に盛大に文字化けしてエラーが出た場合に
+何も分からないと思われるため、Windows Terminal 推奨。
+管理者権限が必要。
+
+```
+wsl --help
+wsl --list --online
+wsl --install <Distribution Name>
+```
+
+Distribution Name を指定しないとデフォルトで Ubuntu がインストールされるため
+注意(一敗)。
+ディストリビューションの削除は --unregister コマンドでできる
+(何でアンインストールじゃないんだ)。
+しかしスタートメニューに残る気もするのでそこからアンインストールする。
+しかし Windows Terminal のメニューに残る気もするので Windows Terminal を
+再インストールする。。
+
+## WSL の有効化 (旧)
 管理者権限で PowerShell を開き、以下を実行する。
 (WSL1 が動いているなら既に有効になっているはず)
 コントロールパネルの "Windows 機能の有効化" 相当っぽい。
@@ -101,7 +145,7 @@ https://docs.microsoft.com/ja-jp/windows/wsl/install-win10
 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 ```
 
-## 仮想マシン機能の有効化
+## 仮想マシン機能の有効化 (旧)
 Windows の仮想マシン機能っぽい何か。
 WSL2 は仮想マシン上で Linux kernel を動作させる。
 BIOS で仮想化機能を有効にしておく必要がある可能性がある。
@@ -110,22 +154,11 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 ```
 ここで **再起動** が必要らしい。
 
-## Linux kernel の更新
+## Linux kernel の更新 (旧)
 https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
 
 現在の Windows 内に Linux kernel が同梱されている衝撃。
 更新しなくてもまあまあ動くかもしれないし、更新しないと動かない場合もあるらしい。
-
-## WSL デフォルトバージョンの変更
-新規インストール時のバージョンを 2 にする。
-
-PowerShell で
-```
-wsl --set-default-version 2
-```
-
-## ディストリビューションのインストール
-ストアで Linux で検索すると色々出てくるので好きなものをインストールする。
 
 ## WSL1 からの移行
 インストールされているディストリビューションと WSL version のリスト
@@ -140,6 +173,12 @@ wsl --set-version <distribution name> <versionNumber>
 
 例:
 wsl --set-version Debian 2
+```
+
+新規インストール時のバージョンを 2 にするには
+(WSL1 を使っていたのでなければおそらく不要)
+```
+wsl --set-default-version 2
 ```
 
 ## 仮想ディスクの掃除
@@ -177,12 +216,20 @@ exit
 WSL はシャットダウン状態でシェルを開こうとすると自動的に起動する。
 
 ## Linux kernel のアップデート
-管理者権限で PowerShell を開き、
+最近は WSL 内で促されるようになった気がする。
+wsl.exe で可能 (WSL から Windows コマンドを実行する場合は .exe が必要)。
 ```
-wsl --update
+wsl.exe --update
 ```
 
 カーネルバージョン確認は WSL 内で
 ```
 uname -r
 ```
+
+## WSL の移行 or バックアップ/リストア
+```
+wsl.exe --export
+wsl.exe --import
+```
+で可能らしい。(未検証)
