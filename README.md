@@ -152,10 +152,10 @@ Windows Terminal でないとインストール中に盛大に文字化けして
 何も分からないと思われるため、Windows Terminal 推奨。
 管理者権限が必要。
 
-```ps
+```powershell
 wsl --help
 wsl --list --online
-wsl --install <Distribution Name>
+wsl --install [Distribution Name]
 ```
 
 Distribution Name を指定しない (公式の `wsl --install` の通りに実行する) と
