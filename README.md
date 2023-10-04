@@ -3,14 +3,21 @@
 WSL (Windows Subsystem for Linux) の覚え書き。
 最初にやることリスト。
 
+## リンク
+
+無事インストールできた後のことはこちら
+
+* [WSL](wsl.md)
+* [VSCode](vscode.md)
+
 ## 3行まとめ
 
 ストアを開いて
 
 * WSL2
-  * Windows Subsystem for Linux と Ubuntu, Debian のような個別のディストロが
-  あるが、違いはよく分からない。前者は改めてディストロを選択してインストールする
-  必要があるかも？
+  * ストアにはWindows Subsystem for Linux と Ubuntu, Debian のような個別の
+  ディストロがあるが、違いはよく分からない。
+  前者は改めてディストロを選択してインストールする必要があるかも？
   個人的には Raspberry Pi に合わせて Debian を使用している。
 * VSCode
 * Windows Terminal
