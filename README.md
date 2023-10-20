@@ -28,6 +28,13 @@ Windows Terminal は Windows 11 2022 Update (22H2) で既定のターミナル�
 ストアが使えない場合はそれぞれ頑張ってダウンロードしてきてインストールする。
 学校や会社の PC はそうなりがちなので頑張る。
 
+追加でインターネットが使える環境なら
+
+* winget (Windows 版 apt/yum)
+
+他の Windows アプリの更新も簡単にできるようになったりする。
+なお vscode を winget からインストールすると右クリックメニューが追加されないとの噂。
+
 ## 3行でない手順
 
 * Windows で github 上でこのファイルを見る。
@@ -60,8 +67,46 @@ PreInstallKit でない普通のパッケージをダウンロードする。
 なるものを入れてみる。
 1. ダメなら、会社の PC に Windows Update がかかるのを待って再チャレンジ。
 
-詳しくは github トップの README に書いてある。
+詳しくは github トップの README に書いてある。\
 <https://github.com/microsoft/terminal>
+
+実は依存先が見つからないエラーの場合は以下の手法で突破できる可能性がある。
+
+1. <https://www.nuget.org/> へ行く。
+1. 見つからないパッケージ名で検索 (例: Microsoft.UI.Xaml.2.8)
+1. .NET 系ツールでのインストールコマンドが表示されているが、おそらくそんなものは
+  使えない環境と思われるので、右ペインに "Download package" というリンクがある。
+1. .nupkg ファイルを .zip にリネーム、展開。
+1. `tools/AppX` 以下にパッケージがあるので x64 を `Add-AppxPackage` でインストール。
+
+### Windows Terminal by winget - ストアが使えない場合
+
+winget (Microsoft 謹製 Windows 用パッケージマネージャ) に対応しているらしいので、
+winget を入れる方を頑張ってもいいのかもしれない。
+依存も自動で解消してくれるとの噂。最新への更新も楽だと思う。
+他のアプリのインストール/更新も楽になる可能性がある。
+~~要は apt / yum のぱくり。~~
+winget 以外からインストールされたアプリも、リポジトリに存在すれば
+アップデートできるらしい。
+インターネット接続は必須なので、無い場合は諦めてください＾＾。
+
+ストアが使えるならストアからインストールできる(最初から入っている説もある)。
+
+<https://learn.microsoft.com/ja-jp/windows/package-manager/winget/>
+
+ストアが使えない場合はここの "Windows サンドボックスに winget をインストールする"
+にあるコマンドを PowerShell で実行する。
+(やたら長い上将来バージョンが変わりそうにしか見えないが)
+
+```bat
+winget install --id Microsoft.WindowsTerminal -e
+```
+
+なお、winget を PowerShell 上で動かすと盛大に文字化けする。
+WindowsTerminal なら問題ないが、WindowsTerminal のインストール中に起こるため詰む。
+どうやらフォントが勝手に Consolas になるのが原因らしいので、
+タイトルバーを右クリックして設定からフォントを適当な日本語フォントに設定すれば
+一時的に回避できる。
 
 ### 一部ディレクトリの色が見づらい
 
@@ -176,8 +221,10 @@ Distribution Name を指定しない (公式の `wsl --install` の通りに実�
 
 ### WSL の有効化
 
-公式だと wsl.exe が全部やってくれる風なことを書いているが、やってくれない気もする。
-wsl.exe が古いだけかもしれない。
+公式だと wsl --install が全部やってくれる風なことを書いているが、
+やってくれない気もする。
+wsl.exe が古いとか、WSL1 を使っていたとかだと有効化シーケンスが
+走らないとかかもしれない。
 機能が有効化されていません的なエラーが出た場合は以下を実行する。
 
 管理者権限で PowerShell を開き、以下を実行する。
