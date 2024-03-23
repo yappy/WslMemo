@@ -10,34 +10,40 @@ WSL (Windows Subsystem for Linux) の覚え書き。
 * [WSL](wsl.md)
 * [VSCode](vscode.md)
 
-## 3行まとめ
+## Windows テク
 
-ストアを開いて
+* 隠しファイルと拡張子の表示をオンにする。
+  * Windows 8 あたりからフォルダオプションを出さなくても切り替えられるように
+  なったっぽいので探してみるのも吉。
+* 右クリックする時に Shift を押し続けていると出てくるメニューが変わる。
+  * Windows 11 だと大分違う。
+* `Windows+R` でファイル名を指定して実行
+  * `Ctrl+Shift+Enter` で管理者権限で実行できる。
+  * `cmd`: 昔ながらの DOS 窓。
+  * `powershell`: PowerShell。Windows Terminal がないうちはとりあえずこれで。
+  (Windows Terminal インストール後も結局中で PowerShell を動かすことになる)
+  * `%userprofile%`: エクスプローラで特殊フォルダを開ける。
+  * `%appdata%`
 
-* WSL2
-  * ストアにはWindows Subsystem for Linux と Ubuntu, Debian のような個別の
-  ディストロがあるが、違いはよく分からない。
-  前者は改めてディストロを選択してインストールする必要があるかも？
-  個人的には Raspberry Pi に合わせて Debian を使用している。
-* VSCode
+## まとめ
+
+* winget
+  * 入れられるようなら推奨
+* WSL (新規にインストールするなら勝手に WSL2 が入る)
+  * 個人的には Raspberry Pi に合わせて Debian を使用している。
 * Windows Terminal
+* VSCode
 
 Windows Terminal は Windows 11 2022 Update (22H2) で既定のターミナルとなった。
-それ以前の場合はストアで。
+らしい。それ以前の場合はストアで。
 
-ストアが使えない場合はそれぞれ頑張ってダウンロードしてきてインストールする。
+winget やストアが使えない場合はそれぞれ頑張ってダウンロードしてきてインストールする。
 学校や会社の PC はそうなりがちなので頑張る。
-
-追加でインターネットが使える環境なら
-
-* winget (Windows 版 apt/yum)
-
-他の Windows アプリの更新も簡単にできるようになったりする。
-なお vscode を winget からインストールすると右クリックメニューが追加されないとの噂。
 
 ## 3行でない手順
 
-* Windows で github 上でこのファイルを見る。
+* Windows のブラウザから github 上でこのファイルを見る。
+* winget を入れる。
 * WSL を入れる。
 * Linux に入れたら git をインストールしつつ、ここのリポジトリを Linux 上に手に入れる。
 * それを読みながら VSCode と Windows Terminal を入れる。
@@ -48,9 +54,70 @@ sudo apt install git
 git clone https://github.com/yappy/WslMemo
 ```
 
-## ターミナル
+## winget
 
-### Windows Terminal - ストアが使えない場合
+<https://learn.microsoft.com/ja-jp/windows/package-manager/winget/>
+
+おそらくこの公式の説明が一番正確。
+入れられそうなら入れるのを強く推奨。
+
+~~要は apt / yum のぱくり。~~
+使い勝手はほぼ同じです。
+
+新しい Windows では最初から入っている可能性もある。
+とりあえず `winget -v` と打ってみよう。
+しかしバージョンが古いと動作が怪しい可能性あり。
+v1.2 系はやばいらしい。。依存関係のサポートも v1.6.2631 かららしい。。
+結局のところ、公式の解説からストアへのリンクがあるのでそこからインストールまたは
+アップデートを推奨。
+
+### 使い方
+
+`winget` と入れると出てくる。
+
+* `winget search`
+  * 入れたいものがある時はまずこれでそれっぽいものを探す。
+* `winget install <ID>`
+  * それっぽい名前で通る気もするけど、ID をコピペするのが確実な気がする。
+  IDentifier だし。
+  * `--id <ID>` で ID 検索によるフィルタになるらしい。
+* `winget uninstall <ID>`
+* `winget list`
+  * インストール済み一覧を表示する。winget を使わずに入れたものも表示されて
+  びっくりするかもしれない。リポジトリに存在すればアップデートもできる。
+* `winget upgrade <ID>`
+  * アプリを指定しなければアップデートを確認するのみ。
+  * コマンドラインから自動で安定最新版にアップデートできる。
+  こういうのでいいんだよこういうので。
+
+## Windows Terminal
+
+<https://learn.microsoft.com/ja-jp/windows/terminal/install>
+
+これも公式の解説が一番新しくて正確と思われる。
+
+```powershell
+> winget search "Windows Terminal"
+名前                     ID                                バージョン   ソース
+--------------------------------------------------------------------------------
+Windows Terminal         9N0DX20HK701                      Unknown      msstore
+Windows Terminal Preview 9N8G5RFZ9XK3                      Unknown      msstore
+Windows Terminal         Microsoft.WindowsTerminal         1.19.10573.0 winget
+Windows Terminal Preview Microsoft.WindowsTerminal.Preview 1.20.10572.0 winget
+```
+
+なぜか msstore 版と winget 版が出てくるけど違いは謎。
+入るほうを入れればいいと思う。
+既に入っていた場合は winget upgrade してあげよう。
+
+```powershell
+> winget list Terminal
+名前               ID                        バージョン   ソース
+-----------------------------------------------------------------
+Windows ターミナル Microsoft.WindowsTerminal 1.19.10573.0 winget
+```
+
+### winget/ストアが使えない場合
 
 github に個別インストールパッケージがあるのでこれを利用する。\
 <https://github.com/microsoft/terminal/releases>
@@ -63,7 +130,7 @@ PreInstallKit でない普通のパッケージをダウンロードする。
 1. ダメなら、PowerShell で
 `Add-AppxPackage Microsoft.WindowsTerminal_<versionNumber>.msixbundle`
 を実行する。
-1. ダメなら、Windows 10 を新しくするか VC++ v14 Desktop Framework Package
+1. ダメなら、Windows を新しくするか VC++ v14 Desktop Framework Package
 なるものを入れてみる。
 1. ダメなら、会社の PC に Windows Update がかかるのを待って再チャレンジ。
 
@@ -79,48 +146,37 @@ PreInstallKit でない普通のパッケージをダウンロードする。
 1. .nupkg ファイルを .zip にリネーム、展開。
 1. `tools/AppX` 以下にパッケージがあるので x64 を `Add-AppxPackage` でインストール。
 
-### Windows Terminal by winget - ストアが使えない場合
+### 設定
 
-winget (Microsoft 謹製 Windows 用パッケージマネージャ) に対応しているらしいので、
-winget を入れる方を頑張ってもいいのかもしれない。
-依存も自動で解消してくれるとの噂。最新への更新も楽だと思う。
-他のアプリのインストール/更新も楽になる可能性がある。
-~~要は apt / yum のぱくり。~~
-winget 以外からインストールされたアプリも、リポジトリに存在すれば
-アップデートできるらしい。
-インターネット接続は必須なので、無い場合は諦めてください＾＾。
+タブ追加 "+" ボタンの右にある下矢印を押す (または `Ctrl+,`) と、設定画面を開ける。
 
-ストアが使えるならストアからインストールできる(最初から入っている説もある)。
+* 既定のプロファイル
+  * 新しいタブを開いた時に何を開くか。
+  PowerShell か WSL かで好みの方を設定するとよい。
+* 既定のターミナルアプリケーション
+  * Windows コンソールホストというのが Ctrl+C できない古くてアレな
+  conhost.exe なので、Windows Terminal にしておくと吉。
+  * Windows が新しくないと出てこないかも。
+* その他も一通り眺めておくと吉
 
-<https://learn.microsoft.com/ja-jp/windows/package-manager/winget/>
+### 諸事情
 
-ストアが使えない場合はここの "Windows サンドボックスに winget をインストールする"
-にあるコマンドを PowerShell で実行する。
-(やたら長い上将来バージョンが変わりそうにしか見えないが)
-
-```bat
-winget install --id Microsoft.WindowsTerminal -e
-```
-
-なお、winget を PowerShell 上で動かすと盛大に文字化けする。
-WindowsTerminal なら問題ないが、WindowsTerminal のインストール中に起こるため詰む。
-どうやらフォントが勝手に Consolas になるのが原因らしいので、
-タイトルバーを右クリックして設定からフォントを適当な日本語フォントに設定すれば
-一時的に回避できる。
-
-### 一部ディレクトリの色が見づらい
-
-黒地に濃い青は見えない。
-
-#### 解1: Windows Terminal を使う
-
-デフォルトで WSL が起動する窓は conhost.exe と言って、歴史的には Windows 1.01 上で
+デフォルトで WSL が起動する窓は conhost.exe と言って
+(※Windows 11 あたりから違うかも)、歴史的には Windows 1.01 上で
 MS-DOS アプリケーションを動かすために導入されたものらしい。
-cmd.exe が動くのと同じもので、そういえば cmd.exe は DOS 窓と呼ばれるのでした。
+cmd.exe が動くのと同じもの (※最近は以下略) で、
+そういえば cmd.exe は DOS 窓と呼ばれるのでした。
+
+conhost.exe や Windows Terminal は CUI プログラムの標準入出力を画面でやりとりする
+GUI アプリケーション。
+cmd.exe は CUI アプリケーション。
+C あたりで printf プログラムを書いて exe を実行すると (昔は) conhost.exe で
+動いていたはず(理解者理解)。
 
 文字コードその他いろいろに関して互換性を保ちつつ改良するのが無理になったので、
 Microsoft 公式オープンソースソフトウェアとして Windows Terminal が開発された。
-Windows に同梱はされないが、ストアで検索してポチれば OK。無料。
+Windows に同梱はされないが、winget/ストアで検索してポチれば OK。無料。
+(※Windows 11 の新しいバージョンでは同梱され始めたかも)
 ストアが使えない会社の PC 等は github にパッケージリリースがある (前述)。
 conhost.exe は互換性のため以降もサポートされるが、さすがに歴史を感じすぎるので
 コンソールを使う開発者はとりあえずこれを入れておけばよさそう。
@@ -129,65 +185,7 @@ conhost.exe は互換性のため以降もサポートされるが、さすが�
 タブも使えて PowerShell も WSL も全部これでいける。
 Ctrl + C でコピーできなかったのも conhost.exe のせい。これも解消する。
 
-これでデフォルト背景色がちょっと明るい黒になり、青色が見えるようになる
-(青色も薄くなっている気がするが目の錯覚かもしれない)。
-
-#### 解2: dircolors を設定する
-
-.bashrc でホームディレクトリに `.dircolors` ファイルがあればそれを使うように
-なっているので、`dircolors -p` コマンドでデフォルト値を出力した後
-それを編集する。
-
-```bash
-# Output defaults
-dircolors -p > .dircolors
-
-# <edit>
-
-# Apply
-source ~/.bashrc
-```
-
-`DIR` などの `34=blue` になっているところを `36=cyan` あたりに変更すれば
-だいたい同じ印象のまま視認性が改善する。
-
-```bash
-# Text color codes:
-# 30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
-# Background color codes:
-# 40=black 41=red 42=green 43=yellow 44=blue 45=magenta 46=cyan 47=white
-```
-
-### プロンプトのカレントディレクトリが見づらい
-
-こちらも Windows Terminal へ移行すれば自動的に改善する。
-
-#### Windows Terminal を使わない場合
-
-.bashrc の以下の行が設定箇所。
-
-```bash
-if [ "$color_prompt" = yes ]; then
-PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-```
-
-34(blue) を例えば 36(cyan) にする。
-
-### Tab 自動補完時のビープ音がうるさい
-
-`/etc/inputrc` を編集。
-
-```sh
-# uncomment
-set bell-style none
-```
-
-## WSL2
-
-WSL1 からの移行ガイドを含む。
+## WSL (Windows Subsystem for Linux)
 
 公式ドキュメントトップ:
 <https://docs.microsoft.com/ja-jp/windows/wsl/>
@@ -195,10 +193,25 @@ WSL1 からの移行ガイドを含む。
 インストールガイド:
 <https://learn.microsoft.com/ja-jp/windows/wsl/install>
 
+WSL1 からの移行ガイドを含む。
+
+### 概要 (理解者向け)
+
+Windows で Linux が動く。
+ユーザランドは各ディストリビューションの公式 elf バイナリがそのまま動く
+(WSL1 の時はびっくりしたが WSL2 ではまあそりゃ、といった感じ)。
+
+* WSL1
+  * Linux のシステムコールを Windows Kernel の機能を利用して実現する。
+  Linux Kernel は使わない。
+* WSL2
+  * ただの仮想マシン。WSL 用にカスタマイズされた Linux カーネルを動かす。
+
 ### インストール
 
 Windows 10 の十分なバージョンまたは Windows 11 ならば wsl.exe で必要なものが
 だいたい揃うようになった。
+wsl.exe がない場合は winget かストアでそれっぽいものを持ってくる。
 
 Windows Terminal でないとインストール中に盛大に文字化けしてエラーが出た場合に
 何も分からないと思われるため、Windows Terminal 推奨。
@@ -212,6 +225,7 @@ wsl --install [Distribution Name]
 
 Distribution Name を指定しない (公式の `wsl --install` の通りに実行する) と
 デフォルトで Ubuntu がインストールされるため注意(一敗)。
+どれがよいのかよくわからない人は Ubuntu が無難と思われる。
 よく見ると下に書いてある。
 ディストリビューションの削除は --unregister コマンドでできる
 (何でアンインストールじゃないんだ)。
@@ -225,6 +239,8 @@ Distribution Name を指定しない (公式の `wsl --install` の通りに実�
 やってくれない気もする。
 wsl.exe が古いとか、WSL1 を使っていたとかだと有効化シーケンスが
 走らないとかかもしれない。
+Windows 11 でクリーンインストール状態から wsl.exe に任せた場合は大丈夫だった。
+
 機能が有効化されていません的なエラーが出た場合は以下を実行する。
 
 管理者権限で PowerShell を開き、以下を実行する。
@@ -254,7 +270,7 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 1. タスクマネージャ
 1. パフォーマンス
 1. CPU
-1. "仮想化" の欄
+1. "仮想化" の欄が有効になっているか確認
 
 設定方法は PC によって異なる。。
 
@@ -293,7 +309,7 @@ uname -r
 <https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi>\
 だいたい wsl.exe で事足りそうだが、一応最新のインストーラはここにある。
 
-### WSL1 からの移行
+### WSL1 からの移行 (または 1 に戻す)
 
 インストールされているディストリビューションと WSL version のリスト
 
@@ -317,3 +333,58 @@ wsl --set-version Debian 2
 ```powershell
 wsl --set-default-version 2
 ```
+
+### Tab 自動補完時のビープ音がうるさい
+
+`/etc/inputrc` を編集。
+
+```sh
+# uncomment
+set bell-style none
+```
+
+### 一部ディレクトリの色が見づらい
+
+Windows Terminal ならデフォルト背景色がちょっと明るい黒になり、解決する。
+
+conhost.exe だと黒地に濃い青は見えない。
+
+.bashrc でホームディレクトリに `.dircolors` ファイルがあればそれを使うように
+なっているので、`dircolors -p` コマンドでデフォルト値を出力した後
+それを編集する。
+
+```bash
+# Output defaults
+dircolors -p > .dircolors
+
+# <edit>
+
+# Apply
+source ~/.bashrc
+```
+
+`DIR` などの `34=blue` になっているところを `36=cyan` あたりに変更すれば
+だいたい同じ印象のまま視認性が改善する。
+
+```bash
+# Text color codes:
+# 30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
+# Background color codes:
+# 40=black 41=red 42=green 43=yellow 44=blue 45=magenta 46=cyan 47=white
+```
+
+### プロンプトのカレントディレクトリが見づらい
+
+こちらも Windows Terminal へ移行すれば自動的に改善する。
+
+.bashrc の以下の行が設定箇所。
+
+```bash
+if [ "$color_prompt" = yes ]; then
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+else
+PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+fi
+```
+
+34(blue) を例えば 36(cyan) にする。

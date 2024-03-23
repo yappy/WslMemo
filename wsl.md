@@ -34,6 +34,13 @@ explorer.exe .
 cd /mnt/c
 ```
 
+## Linux GUI アプリ
+
+<https://learn.microsoft.com/ja-jp/windows/wsl/tutorials/gui-apps>
+
+実はいつの間にか実行できるようになっている。
+新しいバージョンの Windows と WSL で実行するだけ。
+
 ## 仮想ディスクの掃除
 
 WSL2 になりただの仮想マシンとなってしまったため、ゲスト OS 上でファイルを消しても

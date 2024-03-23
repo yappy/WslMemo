@@ -72,6 +72,7 @@ code .
 ### Linux
 
 多分最初に WSL という名前の Microsoft 公式プラグインのインストールをおすすめされる。
+おすすめされなかったら自分で検索して入れる。
 多分それで色々といい感じになる (適当)。
 
 不思議な力で `code` コマンドで Linux 上のファイルやディレクトリを開ける。
@@ -125,11 +126,29 @@ code .
 GUI からは発見しにくい (存在しない?) 機能があったりするので一度見てみることを
 おすすめする。
 
+`Esc` でキャンセル。
+
 #### おすすめコマンド
 
 * Markdown: Open Preview to the Side
   * Markdown (*.md) ファイルを右にプレビュー表示してくれる。
   * 読みたい場合、書きたい場合、いずれも便利。
+
+## おすすめ設定
+
+`File > Preferences > Settings (Ctrl+,)` で設定画面を開く。
+中身はシンプルに `settings.json`。
+インポート・エクスポートや Github or Microsoft アカウントに紐づけた同期機能も
+あるらしい(未実験)。
+
+* 上部メニュー `View > Appearance`
+  * Minimap はお好みで。
+  * Render Whitespace, Render Control Characters は有効をおすすめする。
+  * その他いろいろある。
+* editor.renderWhitespace
+  * all にすると常に表示される。タブスペースの混在にうるさいあなたに。
+* editor.rulers
+  * 80 文字のラインを表示させたい時に。
 
 ## おすすめプラグイン
 
@@ -142,10 +161,8 @@ GUI からは発見しにくい (存在しない?) 機能があったりする�
   インデントや改行コードを設定できる。
   * 他人とも設定を共有できる。
   * 全人類が入れることで世界が平和になる。
-* EditorConfigGenerator
-  * 右クリックからテンプレートファイルを生成。
-* EditorConfig VS Code Snippet
-  * 入力補助。
+  * ディレクトリ等を右クリックして一番下の方に `.editorconfig` ファイル生成メニューが
+  増える。
 * Bookmarks
   * 巨大コードの読解に。
   * 便利だが苦行の必須ツールのためよい思い出がない。。
