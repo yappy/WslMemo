@@ -35,6 +35,7 @@ def main():
 	parser = argparse.ArgumentParser(description="Archive and compress directory")
 	parser.add_argument("src", help="backup source root (e.g. ~)")
 	parser.add_argument("dst", help="backup destination root (e.g. /mnt/d)")
+	parser.add_argument("--ext", default="tar.gz", help="compress file extention (e.g. tar.gz, tar.bz2, tar.xz)")
 	args = parser.parse_args()
 
 	user = getpass.getuser()
@@ -45,7 +46,7 @@ def main():
 	src = pathlib.Path(args.src).resolve()
 	assert src.is_dir(), "<src> must be a directory"
 	dst = pathlib.Path(args.dst).resolve()
-	ar_dst = dst / f"{user}_{host}_{dt_str}.tar.gz"
+	ar_dst = dst / f"{user}_{host}_{dt_str}.{args.ext}"
 	print(f"SRC: {src}")
 	print(f"DST: {ar_dst}")
 	print()
