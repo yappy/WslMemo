@@ -32,7 +32,7 @@ def archive(src, ar_dst):
 		# close and delete
 
 def main():
-	parser = argparse.ArgumentParser(description="Compress directory")
+	parser = argparse.ArgumentParser(description="Archive and compress directory")
 	parser.add_argument("src", help="backup source root (e.g. ~)")
 	parser.add_argument("dst", help="backup destination root (e.g. /mnt/d)")
 	args = parser.parse_args()
@@ -45,11 +45,13 @@ def main():
 	src = pathlib.Path(args.src).resolve()
 	assert src.is_dir(), "<src> must be a directory"
 	dst = pathlib.Path(args.dst).resolve()
-	ar_dst = dst / f"{user}_{host}_{dt_str}.tar.bz2"
+	ar_dst = dst / f"{user}_{host}_{dt_str}.tar.gz"
 	print(f"SRC: {src}")
 	print(f"DST: {ar_dst}")
 	print()
 
+	dst.mkdir(parents=True, exist_ok=True)
+	print(f"mkdir: {dst}")
 	archive(src, ar_dst)
 
 	print("OK!")

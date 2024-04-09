@@ -22,7 +22,8 @@ WSL (Windows Subsystem for Linux) の覚え書き。
   * `cmd`: 昔ながらの DOS 窓。
   * `powershell`: PowerShell。Windows Terminal がないうちはとりあえずこれで。
   (Windows Terminal インストール後も結局中で PowerShell を動かすことになる)
-  * `%userprofile%`: エクスプローラで特殊フォルダを開ける。
+* エクスプローラでパスに環境変数を使用
+  * `%userprofile%`
   * `%appdata%`
 
 ## まとめ

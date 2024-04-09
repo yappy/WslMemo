@@ -12,6 +12,8 @@ DEBIAN JP Project\
 Debian フリーソフトウェアガイドラインに適合したもののみを使いたいわけではないなら
 contrib, non-free を追加する。
 
+bookworm から non-free-firmware も増えた気がする。
+
 ## apt ソースを日本のミラーサイトにする
 
 こっちの方がアップデートが速い。
