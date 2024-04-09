@@ -9,6 +9,7 @@ WSL (Windows Subsystem for Linux) の覚え書き。
 
 * [WSL](wsl.md)
 * [VSCode](vscode.md)
+* [便利ツール集](tools/README.md)
 
 ## Windows テク
 
