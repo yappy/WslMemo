@@ -10,7 +10,7 @@ import tempfile
 import shutil
 
 def exec(cmd):
-	print(f"EXEC: {cmd}")
+	print(f"EXEC: {' '.join(cmd)}")
 	subprocess.run(cmd, check=True)
 
 def archive(src, ar_dst):
@@ -46,13 +46,13 @@ def main():
 	src = pathlib.Path(args.src).resolve()
 	assert src.is_dir(), "<src> must be a directory"
 	dst = pathlib.Path(args.dst).resolve()
+	dst.mkdir(parents=True, exist_ok=True)
+	print(f"mkdir: {dst}")
 	ar_dst = dst / f"{user}_{host}_{dt_str}.{args.ext}"
 	print(f"SRC: {src}")
 	print(f"DST: {ar_dst}")
 	print()
 
-	dst.mkdir(parents=True, exist_ok=True)
-	print(f"mkdir: {dst}")
 	archive(src, ar_dst)
 
 	print("OK!")
