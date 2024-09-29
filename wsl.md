@@ -41,6 +41,74 @@ cd /mnt/c
 実はいつの間にか実行できるようになっている。
 新しいバージョンの Windows と WSL で実行するだけ。
 
+## Windows のメモリが枯渇する
+
+いきなり Windows 側でメモリ不足のエラーが出てびっくりする。
+タスクマネージャを見ると Vmmem というタスクが大量のメモリを食っている。
+
+原因は Linux のファイルシステムのキャッシュ。
+元来 OS はメモリのある限りファイル I/O の結果はキャッシュとしてメモリに残して
+おこうとするが、
+WSL ではそれをハイパーバイザでハンドルして動的に割り当てる。
+キャッシュ領域はメモリが足りなくなった時に解放されその目的のために使用されるが、
+それは Linux の中での話で Windows でメモリが足りなくなった時に
+Linux のキャッシュを解放してもらうような仕組みにはなっていない。
+
+### wsl を再起動する
+
+なんやかんやでこれが一番簡単。
+
+```sh
+wsl.exe --shutdown
+```
+
+### キャッシュを捨てる
+
+デバイスファイルに数字を書き込むとファイルシステムのキャッシュをコントロールできる。
+(vm は Virtual Machine ではなく Virtual Memory。
+ハイパーバイザとは関係なく、OS の仮想メモリ管理システム。)
+
+```sh
+sudo sh -c "echo 3 >'/proc/sys/vm/drop_caches'
+```
+
+### WSL 用のメモリ上限を設定する
+
+`%USERPROFILE%\.wslconfig`
+
+```txt
+[wsl2]
+memory=6GB
+```
+
+昔は搭載メモリの 80% がデフォルトだったが、Build 20175 からは
+`min(physical / 2, 8GiB)` がデフォルトらしい。
+80% は Windows 側がやばい気もするけど、思いっきり使わせたい時もあるだろうから
+難しいところ。
+
+```sh
+# Physical Memory 16 GiB
+$ free -h
+               total        used        free      shared  buff/cache   available
+Mem:           7.7Gi       2.4Gi       5.4Gi       2.4Mi       145Mi       5.4Gi
+Swap:          2.0Gi       1.0Mi       2.0Gi
+```
+
+Linux からは (仮想化された) 物理メモリとファイルシステムキャッシュは
+`free` コマンドで見れる。
+free が本当に全く使っていない空きメモリで、available がいざとなったらキャッシュを
+追い出して使える分も含めた利用可能メモリ。
+
+### autoMemoryReclaim
+
+<https://learn.microsoft.com/ja-jp/windows/wsl/wsl-config>
+
+experimental の autoMemoryReclaim で CPU があまり使われていないのを検出した時に
+自動でメモリを返すようにできる、らしい。
+ただし gradual に設定すると cgroup v2 が有効になるため、v1 に依存した
+システムが不具合を起こすかもしれない、らしい。
+いつ experimental を脱却するのかも不明。もうしているかもしれない。
+
 ## 仮想ディスクの掃除
 
 WSL2 になりただの仮想マシンとなってしまったため、ゲスト OS 上でファイルを消しても
