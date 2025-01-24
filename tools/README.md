@@ -1,5 +1,44 @@
 # 便利ツール集
 
+## Windows
+
+### vhdx.py
+
+WSL の仮想ディスクファイルを
+
+* Windows 専用
+  * Windows 版 python が必要。
+* 管理者権限が必要
+  * diskpart の実行のため。
+  * vhdx ファイルの検索には不要。
+
+```powershell
+py vhdx.py -h
+py vhdx.py find -h
+py vhdx.py compact -h
+```
+
+#### vhdx.py find
+
+```powershell
+py vhdx.py find [--dir DIR]
+```
+
+仮想ディスクファイル (ext4.vhdx) を検索する。
+通常は環境変数 `%LocalAppData%` 内にあるのでデフォルトではそこを検索する。
+`--dir` は通常指定する必要はない。
+
+#### vhdx.py compact
+
+```powershell
+py vhdx.py compact VHDX
+```
+
+指定した仮想ディスクファイルのサイズを最適化する。
+`wsl.exe --shutdown` で全仮想マシンを停止させた後、
+テンポラリファイルとして `diskpart` スクリプトを作成し、実行する。
+ファイル名には `vhdx.py find` の結果をコピペすればよい。
+
 ## Linux
 
 ### archive.py - ディレクトリをアーカイブしてバックアップ
@@ -40,5 +79,3 @@ C/C++ や Rust のビルド生成物が多すぎる時に。
 バックアップや仮想ディスクの最適化前に。
 
 ※cargo clean はともかく make clean はものによっては危険かもしれないので自己責任で。
-
-## Windows

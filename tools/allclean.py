@@ -35,5 +35,5 @@ def main():
 		print("Specify at least one clean option.")
 		print("-h or --help to show help.")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	main()

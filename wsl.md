@@ -116,6 +116,8 @@ WSL2 になりただの仮想マシンとなってしまったため、ゲスト
 docker を連打した、事故ってクソデカファイルを作ってしまった、
 いつの間にか肥大化していた、等の場合。
 
+[Python スクリプトを用意しました](./tools/README.md)
+
 Microsoft の github に issue が上がっている。
 
 <https://github.com/microsoft/WSL/issues/4699>
@@ -141,6 +143,9 @@ compact vdisk
 detach vdisk
 exit
 ```
+
+`diskpart /s <script>` であらかじめ用意したコマンドスクリプトを実行することも
+できるらしい。
 
 WSL はシャットダウン状態でシェルを開こうとすると自動的に起動する。
 
