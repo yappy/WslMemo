@@ -4,7 +4,7 @@
 
 ### vhdx.py
 
-WSL の仮想ディスクファイルを
+WSL2 の仮想ディスクファイルサイズを最適化します。
 
 * Windows 専用
   * Windows 版 python が必要。
@@ -38,6 +38,17 @@ py vhdx.py compact VHDX
 `wsl.exe --shutdown` で全仮想マシンを停止させた後、
 テンポラリファイルとして `diskpart` スクリプトを作成し、実行する。
 ファイル名には `vhdx.py find` の結果をコピペすればよい。
+
+### vhdx_(cmd).bat
+
+`vhdx.py` のバッチファイル版です。
+バッチファイルの制約により出力がやや不親切ですが、
+Windows 版 python がなくても動きます。
+管理者権限も自動で要求します。
+
+#### vhdx_find.bat
+
+#### vhdx_compact.bat
 
 ## Linux
 
