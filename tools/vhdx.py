@@ -1,9 +1,9 @@
 import argparse
 import ctypes
 import os
+import sys
 import platform
 import glob
-import tempfile
 import subprocess
 
 
@@ -24,6 +24,8 @@ def command_search(args: argparse.Namespace):
 
 
 def command_compact(args: argparse.Namespace):
+	DISKPART_SCRIPT = "diskpart_script.txt"
+
 	file = args.VHDX
 	print(f"Compacting: {file}")
 
@@ -37,21 +39,17 @@ def command_compact(args: argparse.Namespace):
 	print("OK")
 	print()
 
-	with tempfile.NamedTemporaryFile(mode="w+", delete=False) as f:
+	with open(DISKPART_SCRIPT, mode="w+") as f:
 		print(f'select vdisk file="{file}"', file=f)
 		print("attach vdisk readonly", file=f)
 		print("compact vdisk", file=f)
 		print("detach vdisk", file=f)
 
 		f.seek(0)
-		print("[Temporary Script]")
+		print("[DISKPART_SCRIPT]")
 		print(f.read())
 
-	# Windows requires releasing write lock
-	try:
-		exec(["diskpart.exe", "/s", f.name])
-	finally:
-		os.unlink(f.name)
+	exec(["diskpart.exe", "/s", DISKPART_SCRIPT])
 
 	size2, unit2 = auto_unit(os.path.getsize(file))
 	print(f"Original  Size: {size:.1f} {unit}B")
@@ -62,7 +60,14 @@ def check_env(*, require_admin: bool):
 	if platform.system() != "Windows":
 		raise RuntimeError("This script is Windows only")
 	if require_admin and not ctypes.windll.shell32.IsUserAnAdmin():
-		raise RuntimeError("This script requires admin rights")
+		args = ",".join(sys.argv)
+		exec([
+			"powershell", "start-process",
+			"-FilePath", sys.executable,
+			"-ArgumentList", args,
+			"-Verb", "RunAs"
+		])
+		sys.exit(0)
 
 
 def exec(cmd: list[str]):

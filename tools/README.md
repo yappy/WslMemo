@@ -5,12 +5,12 @@
 ### vhdx.py
 
 WSL2 の仮想ディスクファイルサイズを最適化します。
+diskpart コマンドの実行には管理者権限が必要ですが、無ければ自動で要求します。
 
 * Windows 専用
   * Windows 版 python が必要。
-* 管理者権限が必要
-  * diskpart の実行のため。
-  * vhdx ファイルの検索には不要。
+* スクリプトは WSL 外のストレージに置いて実行する
+  * 仮想ディスク最適化のためには VM をシャットダウンする必要があるため。
 
 ```powershell
 py vhdx.py -h
@@ -35,16 +35,20 @@ py vhdx.py compact VHDX
 ```
 
 指定した仮想ディスクファイルのサイズを最適化する。
-`wsl.exe --shutdown` で全仮想マシンを停止させた後、
-テンポラリファイルとして `diskpart` スクリプトを作成し、実行する。
+`wsl --shutdown` で全仮想マシンを停止させた後、
+`diskpart` スクリプトを作成し、実行する。
 ファイル名には `vhdx.py find` の結果をコピペすればよい。
+
+以降、スクリプトファイルは
+`diskpart /s diskpart_script.txt`
+で単独実行できる。
+ただしその場合は `wsl --shutdown` と管理者権限での実行を自分で行う必要がある。
 
 ### vhdx_(cmd).bat
 
 `vhdx.py` のバッチファイル版です。
 バッチファイルの制約により出力がやや不親切ですが、
 Windows 版 python がなくても動きます。
-管理者権限も自動で要求します。
 
 #### vhdx_find.bat
 
