@@ -1,7 +1,7 @@
 # WslMemo
 
-WSL (Windows Subsystem for Linux) の覚え書き。
-最初にやることリスト。
+WSL (Windows Subsystem for Linux) その他いろいろの覚え書き。
+新しい Windows マシンをまともな状態にセットアップするために、最初にやることリスト。
 
 ## リンク
 
@@ -30,11 +30,20 @@ WSL (Windows Subsystem for Linux) の覚え書き。
 ## まとめ
 
 * winget
+  * Windows にインストールされているソフトウェアを
+    apt / yum のようなノリで管理できる。
   * 入れられるようなら推奨
 * WSL (新規にインストールするなら勝手に WSL2 が入る)
+  * Windows の中で (正確には横で) 動く Linux 環境。
+  * WSL2 は仮想マシン方式。
   * 個人的には Raspberry Pi に合わせて Debian を使用している。
 * Windows Terminal
+  * デフォルトで入っているターミナルは互換性維持のため変更を入れにくいので、
+    分かってる人はこれを入れてほしいという Microsoft 公式の結構ちゃんとした
+    コンソール。
+  * DOS 窓、powershell、WSL 全てに対応。シェル自体ではなくそれの GUI 的なところ。
 * VSCode
+  * テキストエディタ。
 
 Windows Terminal は Windows 11 2022 Update (22H2) で既定のターミナルとなった。
 らしい。それ以前の場合はストアで。
@@ -42,19 +51,26 @@ Windows Terminal は Windows 11 2022 Update (22H2) で既定のターミナル�
 winget やストアが使えない場合はそれぞれ頑張ってダウンロードしてきてインストールする。
 学校や会社の PC はそうなりがちなので頑張る。
 
-## 3行でない手順
+## 攻略フローチャート
 
 * Windows のブラウザから github 上でこのファイルを見る。
 * winget を入れる。
+* (Windows Git を入れてもいいと思う場合、)`winget install Git` をインストールし、
+  このリポジトリを Windows 上に手に入れる。
 * WSL を入れる。
-* Linux に入れたら git をインストールしつつ、ここのリポジトリを Linux 上に手に入れる。
+* Linux に入れたら Git をインストールしつつ、このリポジトリを Linux 上に手に入れる。
 * それを読みながら VSCode と Windows Terminal を入れる。
 
 ```sh
 # apt 使用の場合
+# 最初から入っているなら不要
 sudo apt install git
 git clone https://github.com/yappy/WslMemo
 ```
+
+winget 導入後、真っ先に Windows Terminal を入れてもよいが、
+後から WSL を入れると設定に WSK の増えなかったりでトラブルを起こすかもしれないし、
+最近は直っているかもしれない。
 
 ## winget
 
@@ -66,12 +82,19 @@ git clone https://github.com/yappy/WslMemo
 ~~要は apt / yum のぱくり。~~
 使い勝手はほぼ同じです。
 
-新しい Windows では最初から入っている可能性もある。
+新しい Windows では最初から入っているっぽい。
 とりあえず `winget -v` と打ってみよう。
 しかしバージョンが古いと動作が怪しい可能性あり。
-v1.2 系はやばいらしい。。依存関係のサポートも v1.6.2631 かららしい。。
-結局のところ、公式の解説からストアへのリンクがあるのでそこからインストールまたは
-アップデートを推奨。
+v1.2 系はやばいらしい。。依存関係のサポートも v1.6.2631 かららしい。
+
+winget 自身のアップデートは何だかよく分からない。
+ストアから入れると自動更新されるし推奨のようだが、GitHub のトップの readme に
+従うのがよいのかもしれない。
+
+<https://github.com/microsoft/winget-cli>
+
+分かりづらいが、ストア等での名前は App Installer というらしい。
+分かりづらい。
 
 ### 使い方
 
@@ -92,6 +115,19 @@ v1.2 系はやばいらしい。。依存関係のサポートも v1.6.2631 か�
   * コマンドラインから自動で安定最新版にアップデートできる。
   こういうのでいいんだよこういうので。
 
+### winget と msstore
+
+`winget search` するとソースの欄に `msstore` と `winget` の2つが出てくることがある。
+Python の公式サイトには以下のように書いてあったりする。
+
+> Microsoft store版は簡単かつ安全にインストールできる反面、
+Python Launcher がインストールされない、
+ディレクトリやレジストリへのアクセスが仮想化される、などの制限があります。
+このため、アプリケーションによっては、 不具合が発生する 場合があります。
+
+かなり怪しいことが書いてあるので、公式案内で自信満々にストア版を推奨している場合以外は
+winget の方を選んだ方が無難かもしれない。
+
 ## Windows Terminal
 
 <https://learn.microsoft.com/ja-jp/windows/terminal/install>
@@ -108,8 +144,6 @@ Windows Terminal         Microsoft.WindowsTerminal         1.19.10573.0 winget
 Windows Terminal Preview Microsoft.WindowsTerminal.Preview 1.20.10572.0 winget
 ```
 
-なぜか msstore 版と winget 版が出てくるけど違いは謎。
-入るほうを入れればいいと思う。
 既に入っていた場合は winget upgrade してあげよう。
 
 ```powershell
@@ -156,12 +190,14 @@ PreInstallKit でない普通のパッケージをダウンロードする。
   * 新しいタブを開いた時に何を開くか。
   PowerShell か WSL かで好みの方を設定するとよい。
 * 既定のターミナルアプリケーション
-  * Windows コンソールホストというのが Ctrl+C できない古くてアレな
+  * Windows コンソールホストというのが Ctrl+C でコピーできない古くてアレな
   conhost.exe なので、Windows Terminal にしておくと吉。
   * Windows が新しくないと出てこないかも。
 * その他も一通り眺めておくと吉
 
 ### 諸事情
+
+(読まなくても OK)
 
 デフォルトで WSL が起動する窓は conhost.exe と言って
 (※Windows 11 あたりから違うかも)、歴史的には Windows 1.01 上で
@@ -181,7 +217,7 @@ Windows に同梱はされないが、winget/ストアで検索してポチれ�
 (※Windows 11 の新しいバージョンでは同梱され始めたかも)
 ストアが使えない会社の PC 等は github にパッケージリリースがある (前述)。
 conhost.exe は互換性のため以降もサポートされるが、さすがに歴史を感じすぎるので
-コンソールを使う開発者はとりあえずこれを入れておけばよさそう。
+コンソールを使う開発者はとりあえず Windows Terminal を入れておけばよさそう。
 
 とりあえず評判はよい。
 タブも使えて PowerShell も WSL も全部これでいける。
@@ -208,6 +244,7 @@ Windows で Linux が動く。
   Linux Kernel は使わない。
 * WSL2
   * ただの仮想マシン。WSL 用にカスタマイズされた Linux カーネルを動かす。
+  * 正確には Hyper-V ハイパーバイザの上で Windows と Linux が同時に動く。
 
 ### インストール
 
@@ -217,6 +254,7 @@ wsl.exe がない場合は winget かストアでそれっぽいものを持っ�
 
 Windows Terminal でないとインストール中に盛大に文字化けしてエラーが出た場合に
 何も分からないと思われるため、Windows Terminal 推奨。
+(この辺りは Windows 11 からかなり改善されていると思われる)
 管理者権限が必要。
 
 ```powershell
@@ -227,13 +265,10 @@ wsl --install [Distribution Name]
 
 Distribution Name を指定しない (公式の `wsl --install` の通りに実行する) と
 デフォルトで Ubuntu がインストールされるため注意(一敗)。
-どれがよいのかよくわからない人は Ubuntu が無難と思われる。
 よく見ると下に書いてある。
+どれがよいのかよくわからない人は Ubuntu が無難と思われる。
 ディストリビューションの削除は --unregister コマンドでできる
 (何でアンインストールじゃないんだ)。
-しかしスタートメニューに残る気もするのでそこからアンインストールする。
-しかし Windows Terminal のメニューに残る気もするので Windows Terminal を
-再インストールする。。
 
 ### WSL の有効化
 
@@ -246,7 +281,6 @@ Windows 11 でクリーンインストール状態から wsl.exe に任せた場
 機能が有効化されていません的なエラーが出た場合は以下を実行する。
 
 管理者権限で PowerShell を開き、以下を実行する。
-(WSL1 が動いているなら既に有効になっているはず)
 コントロールパネルの "Windows 機能の有効化" 相当っぽい。
 
 ```powershell
@@ -263,10 +297,12 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 ```
 
 ここで **再起動** が必要らしい。
+このあたりは BIOS (UEFI) とか HyperVisor とかが絡んでいそうな雰囲気があるので、
+何か変だったらとりあえず再起動する。
 
 ### BIOS 仮想化機能有効化
 
-上記まででうまくいかない場合、BIOS(UEFI) で仮想化機能が無効になっている可能性がある。
+上記まででうまくいかない場合、BIOS (UEFI) で仮想化機能が無効になっている可能性がある。
 確認方法は以下。
 
 1. タスクマネージャ
@@ -276,7 +312,7 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 
 設定方法は PC によって異なる。。
 
-1. 起動時に F2 か Delete キーあたりを連打する。
+1. 起動時に F2 か Delete キーあたりを連打して BIOS (UEFI) の設定画面を出す。
 1. Advanced とか Virtualization あたりの設定項目を探す。
 1. 有効にする。
 
@@ -297,6 +333,8 @@ Intel CPU と AMD CPU では名前も仕様も違う。どうして…。
 現在の Windows 内に Linux kernel が同梱されている衝撃。
 更新しなくてもまあまあ動くかもしれないし、更新しないと動かない場合もあるらしい。
 最近はログインするだけで自動でアップデートをお知らせしてくれるようになった。親切。
+`winget upgrade` からも可能になっている気がするし、
+Linux の中から `apt upgrade` もできるようにもなった気がする。
 
 ```powershell
 wsl.exe --update
@@ -305,11 +343,9 @@ wsl.exe --update
 カーネルバージョン確認は WSL 内で
 
 ```sh
-uname -r
+$ uname -r
+5.15.167.4-microsoft-standard-WSL2
 ```
-
-<https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi>\
-だいたい wsl.exe で事足りそうだが、一応最新のインストーラはここにある。
 
 ### WSL1 からの移行 (または 1 に戻す)
 
