@@ -55,11 +55,14 @@ winget やストアが使えない場合はそれぞれ頑張ってダウンロ�
 
 * Windows のブラウザから github 上でこのファイルを見る。
 * winget を入れる。
+  * 最近は最初から入っているかもしれない。
 * (Windows Git を入れてもいいと思う場合、)`winget install Git` をインストールし、
   このリポジトリを Windows 上に手に入れる。
+* (Optional) powershell の最新版を入れる。
 * WSL を入れる。
 * Linux に入れたら Git をインストールしつつ、このリポジトリを Linux 上に手に入れる。
 * それを読みながら VSCode と Windows Terminal を入れる。
+  * Windows Terminal は最初から入っているかもしれない。
 
 ```sh
 # apt 使用の場合
@@ -182,18 +185,75 @@ PreInstallKit でない普通のパッケージをダウンロードする。
 1. .nupkg ファイルを .zip にリネーム、展開。
 1. `tools/AppX` 以下にパッケージがあるので x64 を `Add-AppxPackage` でインストール。
 
-### 設定
+### PowerShell 最新版インストール
+
+* Windows PowerShell (5.1)
+  * Windows に最初からついてくるコンソール。
+  * おそらく互換性重視のため初期状態から更新されない。Windows の一部という扱いっぽい。
+* PowerShell (7.x)
+  * 上記とは共存する形で別個にインストール可能な普通のオープンソースプロジェクト。
+
+~~名前おかしくない？~~
+
+Windows のデフォルト付属品をアップデートする形となると、
+互換性の観点から以前と挙動が変わるような破壊的な変更が入れられず、
+バージョンアップ内容が大幅に制限されるためこうしたと思われる。
+
+PowerShell 使わないよという人は入れる必要は無いが、
+最初にバージョン番号が表示されるとか、入力予測補完 (→キーで適用) 機能が増えていたりとか
+するので入れてみるのも吉。
+
+現在のバージョン確認 (新しいバージョンだと起動時に勝手に表示される)
+
+```powershell
+> $PSVersionTable
+
+Name                           Value
+----                           -----
+PSVersion                      5.1.19041.5486
+PSEdition                      Desktop
+PSCompatibleVersions           {1.0, 2.0, 3.0, 4.0...}
+BuildVersion                   10.0.19041.5486
+CLRVersion                     4.0.30319.42000
+WSManStackVersion              3.0
+PSRemotingProtocolVersion      2.3
+SerializationVersion           1.1.0.1
+```
+
+```powershell
+> winget search Microsoft.PowerShell
+名前               ID                           バージョン ソース
+------------------------------------------------------------------
+PowerShell         Microsoft.PowerShell         7.5.0.0    winget
+PowerShell Preview Microsoft.PowerShell.Preview 7.6.0.2    winget
+
+> winget install Microsoft.PowerShell
+```
+
+### Windows Terminal 設定
 
 タブ追加 "+" ボタンの右にある下矢印を押す (または `Ctrl+,`) と、設定画面を開ける。
 
 * 既定のプロファイル
-  * 新しいタブを開いた時に何を開くか。
-  PowerShell か WSL かで好みの方を設定するとよい。
+  * 起動時、または新しいタブを開いた時に何を開くか。
+  * PowerShell か WSL かで好みの方を設定するとよい。
 * 既定のターミナルアプリケーション
   * Windows コンソールホストというのが Ctrl+C でコピーできない古くてアレな
   conhost.exe なので、Windows Terminal にしておくと吉。
   * Windows が新しくないと出てこないかも。
 * その他も一通り眺めておくと吉
+
+### Windows Terminal もっと詳細な設定
+
+新しい PowerShell は OS 付属の古いバージョンとは独立共存する形でインストールされるが、
+リストの一番下に追加されるため使いにくいかもしれない。
+しかしプロファイルを GUI 上からは並べ替えられない。。
+
+設定を開く時に Shift キーを押しっぱなしにすると、設定ファイル (json) を開ける
+(`Ctrl+Shift+,` or `Shift+クリック`)。
+または実はよく見ると設定画面の左下に `JSON ファイルを開く` ボタンがあるのでそれを押す。
+
+これで JSON ファイルを直接編集して順番を並べ替えれば OK。
 
 ### 諸事情
 
