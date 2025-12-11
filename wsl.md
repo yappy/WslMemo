@@ -69,7 +69,7 @@ wsl.exe --shutdown
 ハイパーバイザとは関係なく、OS の仮想メモリ管理システム。)
 
 ```sh
-sudo sh -c "echo 3 >'/proc/sys/vm/drop_caches'
+sudo sh -c "echo 3 > /proc/sys/vm/drop_caches"
 ```
 
 ### WSL 用のメモリ上限を設定する
