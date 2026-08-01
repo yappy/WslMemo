@@ -16,7 +16,7 @@ def command_search(args: argparse.Namespace):
 	for name in glob.iglob(f"{dir}/**/ext4.vhdx", recursive=True):
 		count += 1
 		print(f"[{count}]")
-		print(name)
+		print(f"'{name}'")
 		size, unit = auto_unit(os.path.getsize(name))
 		print(f"Size: {size:.1f} {unit}B")
 	print()
@@ -60,7 +60,7 @@ def check_env(*, require_admin: bool):
 	if platform.system() != "Windows":
 		raise RuntimeError("This script is Windows only")
 	if require_admin and not ctypes.windll.shell32.IsUserAnAdmin():
-		args = ",".join(sys.argv)
+		args = ",".join(map(lambda arg: f"'{arg}'", sys.argv))
 		exec([
 			"powershell", "start-process",
 			"-FilePath", sys.executable,
